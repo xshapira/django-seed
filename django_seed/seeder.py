@@ -114,13 +114,11 @@ class ModelSeeder(object):
                 continue
 
             if not field.choices:
-                formatter = name_guesser.guess_format(field_name)
-                if formatter:
+                if formatter := name_guesser.guess_format(field_name):
                     formatters[field_name] = formatter
                     continue
 
-            formatter = field_type_guesser.guess_format(field)
-            if formatter:
+            if formatter := field_type_guesser.guess_format(field):
                 formatters[field_name] = formatter
                 continue
 
@@ -138,9 +136,7 @@ class ModelSeeder(object):
         """
 
         def format_field(format, inserted_entities):
-            if callable(format):
-                return format(inserted_entities)
-            return format
+            return format(inserted_entities) if callable(format) else format
 
         def turn_off_auto_add(model):
             for field in model._meta.fields:
@@ -225,11 +221,11 @@ class Seeder(object):
             klass = order["klass"]
             entity = order["entity"]
 
-            logging.debug("Creating {} of {}".format(number, klass))
+            logging.debug(f"Creating {number} of {klass}")
 
             if klass not in inserted_entities:
                 inserted_entities[klass] = []
-            for i in range(0, number):
+            for _ in range(number):
                 executed_entity = entity.execute(using, inserted_entities)
                 inserted_entities[klass].append(executed_entity)
 

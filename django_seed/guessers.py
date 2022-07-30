@@ -84,7 +84,7 @@ class FieldTypeGuesser(object):
 
         if isinstance(field, URLField): return lambda x: faker.uri()
         if isinstance(field, SlugField): return lambda x: faker.uri_page()
-        if isinstance(field, IPAddressField) or isinstance(field, GenericIPAddressField):
+        if isinstance(field, (IPAddressField, GenericIPAddressField)):
             protocol = random.choice(['ipv4', 'ipv6'])
             return lambda x: getattr(faker, protocol)()
         if isinstance(field, EmailField): return lambda x: faker.email()

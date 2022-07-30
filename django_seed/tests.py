@@ -239,7 +239,7 @@ class SeederTestCase(TestCase):
         self.assertTrue(len(inserted_pks[Player]) == 10)
 
         players = Player.objects.all()
-        self.assertTrue(any([self.valid_player(p) for p in players]))
+        self.assertTrue(any(self.valid_player(p) for p in players))
 
     @skipIf(django_version[0] < 2, "JSONField does not work with Django 1.11")
     def test_not_covered_fields(self):
@@ -255,7 +255,7 @@ class SeederTestCase(TestCase):
         })
         inserted_pks = seeder.execute()
         self.assertTrue(len(inserted_pks[NotCoveredFields]) == 10)
-        self.assertTrue(all([field.json for field in NotCoveredFields.objects.all()]))
+        self.assertTrue(all(field.json for field in NotCoveredFields.objects.all()))
 
     def test_locale(self):
         ad = AlphabetDetector()
@@ -263,7 +263,7 @@ class SeederTestCase(TestCase):
         seeder = Seeder(faker)
         seeder.add_entity(Game, 5)
         seeder.execute()
-        self.assertTrue(all([ad.is_cyrillic(game.title) for game in Game.objects.all()]))
+        self.assertTrue(all(ad.is_cyrillic(game.title) for game in Game.objects.all()))
 
     def test_null_foreign_key(self):
         faker = fake
@@ -273,7 +273,6 @@ class SeederTestCase(TestCase):
             seeder.execute()
         except Exception as e:
             self.assertTrue(isinstance(e, SeederException))
-        pass
 
     def test_no_entities_added(self):
         faker = fake
@@ -355,7 +354,6 @@ class SeedCommandTestCase(TestCase):
             call_command('seed', 'django_seed', number='asdf')
         except Exception as e:
             self.assertTrue(isinstance(e, SeederCommandError))
-        pass
 
 class DefaultValueTestCase(TestCase):
 
@@ -411,21 +409,28 @@ class LengthRulesTestCase(TestCase):
 
         customer = Customer.objects.get(id=_id[Customer][0])
 
-        self.assertTrue(len(customer.name) <= name_max_len, 
-            "name with length {}, does not respect max length restriction of {}"
-            .format(len(customer.name), name_max_len))
+        self.assertTrue(
+            len(customer.name) <= name_max_len,
+            f"name with length {len(customer.name)}, does not respect max length restriction of {name_max_len}",
+        )
 
-        self.assertTrue(len(customer.country) <= country_max_len,
-            "country with length {}, does not respect max length restriction of {}"
-            .format(len(customer.name), country_max_len))
 
-        self.assertTrue(len(customer.address) <= address_max_len,
-            "address with length {}, does not respect max length restriction of {}"
-            .format(len(customer.name), address_max_len))
+        self.assertTrue(
+            len(customer.country) <= country_max_len,
+            f"country with length {len(customer.name)}, does not respect max length restriction of {country_max_len}",
+        )
 
-        self.assertTrue(len(customer.comments) <= comments_max_len,
-            "comments with length {}, does not respect max length restriction of {}"
-            .format(len(customer.comments), comments_max_len))
+
+        self.assertTrue(
+            len(customer.address) <= address_max_len,
+            f"address with length {len(customer.name)}, does not respect max length restriction of {address_max_len}",
+        )
+
+
+        self.assertTrue(
+            len(customer.comments) <= comments_max_len,
+            f"comments with length {len(customer.comments)}, does not respect max length restriction of {comments_max_len}",
+        )
 
 
 

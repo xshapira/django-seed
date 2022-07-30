@@ -27,9 +27,7 @@ class Provider(object):
         return uuid.uuid4()
 
     def rand_small_int(self, pos=False):
-        if pos:
-            return random.randint(0, 32767)
-        return random.randint(-32768, 32767)
+        return random.randint(0, 32767) if pos else random.randint(-32768, 32767)
 
     def rand_int(self, pos=False):
         if pos:
@@ -48,7 +46,7 @@ class Provider(object):
         return '{0}.{1}'.format(filename, extension)
 
     def comma_sep_ints(self):
-        ints = [str(self.rand_int()) for x in range(10)]
+        ints = [str(self.rand_int()) for _ in range(10)]
         return ','.join(ints)
 
     def binary(self):

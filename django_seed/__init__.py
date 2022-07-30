@@ -23,8 +23,7 @@ class Seed(object):
     def codename(locale=None):
         from django.conf import settings
         locale = locale or getattr(settings, 'LANGUAGE_CODE', None)
-        codename = locale or 'default'
-        return codename
+        return locale or 'default'
 
     @classmethod
     def faker(cls, locale=None, codename=None):
